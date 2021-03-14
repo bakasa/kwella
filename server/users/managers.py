@@ -1,5 +1,8 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import BaseUserManager
+from django.db import models
 from django.utils.translation import ugettext_lazy as _
+
 
 class CustomUserManager(BaseUserManager):
     '''
@@ -37,4 +40,24 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(phone_number, password, **extra_fields)
 
-        
+class OwnerManager(models.Manager):
+    '''
+    Create user of type Taxi Owner
+    '''
+    def get_queryset(self):
+        return super().get_queryset().filter(type=get_user_model().Types.OWNER)
+
+class DriverManager(models.Manager):
+    '''
+    Create user of type Taxi Driver
+    '''
+    def get_queryset(self):
+        return super().get_queryset().filter(type=get_user_model().Types.DRIVER)
+
+class RiderManager(models.Manager):
+    '''
+    Create user of type Rider
+    '''
+    def get_queryset(self):
+        return super().get_queryset().filter(type=get_user_model().Types.RIDER)
+     
