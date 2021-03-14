@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from users.models import Driver, Owner, Rider
+from django.db.utils import DataError
 
 class UserManagerTestCase(TestCase):
     def test_create_user(self):
@@ -12,6 +13,17 @@ class UserManagerTestCase(TestCase):
         self.assertFalse(user.is_active)
         self.assertFalse(user.is_staff) 
         self.assertFalse(user.is_superuser)
+
+        with self.assertRaises(ValueError):
+            # phone number must be 10 digits min
+            User.objects.create_user(
+                phone_number='071234567', password='ilovethispassword')
+
+        with self.assertRaises(ValueError):
+            # phone number must be 10 digits max
+            User.objects.create_user(
+                phone_number='07123456789', password='ilovethispassword')
+
 
         with self.assertRaises(TypeError):
             # can't create user with no credentials
@@ -31,9 +43,11 @@ class UserManagerTestCase(TestCase):
         admin_user = User.objects.create_superuser(phone_number='0712345689', password='ilovethispassword')
 
         self.assertEqual(admin_user.phone_number, '0712345689')
+        self.assertEqual(admin_user.type, 'OWNER')
         self.assertTrue(admin_user.is_active)
         self.assertTrue(admin_user.is_staff)
         self.assertTrue(admin_user.is_superuser)
+        
 
         with self.assertRaises(ValueError):
             # superuser attribute must be true

@@ -6,11 +6,13 @@ from .managers import CustomUserManager, DriverManager, OwnerManager, RiderManag
 
 class User(AbstractBaseUser, PermissionsMixin):
     class Types(models.TextChoices):
-        DRIVER = ('DRIVER', 'driver')
-        OWNER = ('OWNER', 'owner')
-        RIDER = ('RIDER', 'rider')
+        DRIVER = ('DRIVER', 'Driver')
+        OWNER = ('OWNER', 'Owner')
+        RIDER = ('RIDER', 'Rider')
 
-    phone_number = models.IntegerField(_("Phone Number"), unique=True)
+    first_name = models.CharField(_("First Name"), max_length=50, null=True, blank=True)
+    last_name = models.CharField(_("Last Name"), max_length=50, null=True, blank=True)
+    phone_number = models.CharField(_("Phone Number"), max_length=10, unique=True)
     is_staff = models.BooleanField(_("Staff"), default=False)
     is_active = models.BooleanField(_("Active"), default=False)
     date_joined = models.DateTimeField(_("Date Joined"), default=timezone.now)
@@ -38,7 +40,7 @@ class Owner(User):
     def save(self, *args, **kwargs):
         # allow taxi owner to access admin site
         self.is_staff = True
-        
+
         # if no user exist, set default type
         if not self.pk:
             self.type = User.Types.OWNER
