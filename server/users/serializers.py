@@ -6,8 +6,9 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ('id', 'first_name', 'last_name', 'type', 'password', 'confirm_password')
+        fields = ('id', 'phone_number', 'first_name', 'last_name', 'type', 'password', 'confirm_password')
         related_only_fields = ('id', )
+        extra_kwargs = {'password': {'write_only': True}}
 
     def validate(self, attrs):
         if attrs.get('password') != attrs.get('confirm_password'):
