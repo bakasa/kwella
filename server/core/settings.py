@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-import environ
+import environ, datetime
 from pathlib import Path
 
 # set env variables
@@ -157,7 +157,19 @@ CHANNEL_LAYER = {
 }
 
 ASGI_APPLICATION = 'core.routing.application'
-# EMAIL SETTINGS
-# EMAIL_CONFIG = env.email_url(
-#     'EMAIL_URL', default='smtp://kandeni'
-# )
+
+
+# REST FRAMEWORK SETTINGS
+REST_FRAMEWORK = {
+    'DEFUALT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
+
+# SIMPLE-JWT
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1),
+    'USER_ID_CLAME': 'id',
+}
