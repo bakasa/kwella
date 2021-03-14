@@ -1,9 +1,11 @@
-from rest_framework.routers import DefaultRouter
 from django.urls import path
+from rest_framework.routers import DefaultRouter
+from rest_framework_simplejwt.views import TokenRefreshView
+from users.views import LoginView, SignUpView
 
-from users.views import SignUpView
-
-# non-viewsets
+# non-viewsets views
 urlpatterns = [
     path('signup/', SignUpView.as_view(), name='signup'),
+    path('login/', LoginView.as_view(), name='login'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='refresh-token'),
 ]
