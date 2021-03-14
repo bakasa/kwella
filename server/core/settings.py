@@ -49,6 +49,9 @@ INSTALLED_APPS = [
 
     # 3rd party 
     'rest_framework',
+    'channels',
+
+    # own
     'trips',
     'users',
 ]
@@ -142,6 +145,18 @@ CACHES = {
     'default': env.cache(),
     'redis': env.cache('REDIS_URL')
 }
+
+# DJANGO CHANNEL SETTINGS
+CHANNEL_LAYER = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': env('REDIS_URL')
+        }
+    }
+}
+
+ASGI_APPLICATION = 'core.routing.application'
 # EMAIL SETTINGS
 # EMAIL_CONFIG = env.email_url(
 #     'EMAIL_URL', default='smtp://kandeni'
