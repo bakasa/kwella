@@ -13,6 +13,7 @@ cryptography==3.4.6
 daphne==3.0.1
 Django==3.1.7
 django-environ==0.4.5
+django-otp==1.0.2
 django-redis==4.12.1
 djangorestframework==3.12.2
 djangorestframework-simplejwt==4.6.0
