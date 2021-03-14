@@ -128,7 +128,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Harare'
+USE_TZ = True
 
 USE_I18N = True
 
@@ -178,3 +179,6 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1),
     'USER_ID_CLAME': 'id',
 }
+
+# SEND SMS
+# SENDSMS_BACKEND = 'sendsms.backends.console.SmsBackend' (default: 'sendsms.backends.console.SmsBackend')

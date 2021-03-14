@@ -84,8 +84,8 @@ class AuthenticationTest(APITestCase):
             'password': PASSWORD
         })
 
-        import pdb
-        pdb.set_trace()
+        # import pdb
+        # pdb.set_trace()
 
 
         # parse payload data from access token

@@ -1,8 +1,16 @@
-from django.db import models
+from datetime import datetime
+
+import pytz
+from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from django.utils.translation import ugettext_lazy as _ 
+from django.db import models
 from django.utils import timezone
-from .managers import CustomUserManager, DriverManager, OwnerManager, RiderManager
+from django.utils.translation import ugettext_lazy as _
+from django_otp.oath import TOTP
+
+from .managers import (CustomUserManager, DriverManager, OwnerManager,
+                       RiderManager)
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     class Types(models.TextChoices):
@@ -17,11 +25,19 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(_("Active"), default=False)
     date_joined = models.DateTimeField(_("Date Joined"), default=timezone.now)
     type=models.CharField(_("User Type"), max_length=50, choices=Types.choices, default=Types.RIDER)
-
     USERNAME_FIELD = 'phone_number'
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
+
+    def generate_otp(self):
+        '''
+        Generate OTP to send to user's phone number
+        '''
+        
+        totp = TOTP(key=bytes(settings.SECRET_KEY, encoding='utf-8'), t0=int(datetime.now(tz=pytz.UTC).timestamp()), digits=5)
+        
+        return totp.token()
 
     def __str__(self):
         return f'{self.phone_number} - {self.type}'
