@@ -1,6 +1,6 @@
 from datetime import datetime
 
-import pytz
+import pytz, random
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
@@ -32,10 +32,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def generate_otp(self):
         '''
-        Generate OTP to send to user's phone number
+        Generate OTP to send to user's phone number. The token expires after 5 minutes if not verified.
         '''
         
-        totp = TOTP(key=bytes(settings.SECRET_KEY, encoding='utf-8'), t0=int(datetime.now(tz=pytz.UTC).timestamp()), digits=5)
+        totp = TOTP(key=bytes(settings.SECRET_KEY, encoding='utf-8'), t0=(int(datetime.now(tz=pytz.UTC).timestamp()) - random.randint(10000, 100000)), digits=5, step=300)
+
+        # totp.t()
         
         return totp.token()
 

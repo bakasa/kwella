@@ -25,7 +25,7 @@ class AuthenticationTest(APITestCase):
     # AUTHENTICATION PROCESS: SIGNUP -> SEND OTP VIA SMS TO USER -> USER CONFRIMS OTP -> ACCOUNT ACTIVATED  
     def test_owner_can_signup(self):
         response = self.client.post(reverse('signup'), data={
-            'phone_number': '0712345689',
+            'phone_number': '1111111111',
             'first_name': 'Kendrick',
             'last_name': 'Lamar',
             'type': 'OWNER',
@@ -101,3 +101,18 @@ class AuthenticationTest(APITestCase):
         # self.assertEqual(payload_data['first_name'], user.first_name)
         # self.assertEqual(payload_data['last_name'], user.last_name)
         # self.assertEqual(payload_data['type'], user.last_name)
+
+    def test_user_can_verify_otp(self):
+        # signup user
+        user_signup = self.client.post(reverse('signup'), data={
+            'phone_number': '8888888888',
+            'type': 'DRIVER',
+            'password': PASSWORD,
+            'confirm_password': PASSWORD
+        })
+
+        # retrieve user
+        user = get_user_model().objects.last()
+
+        # confirm user is in_active
+        self.assertFalse(user.is_active)

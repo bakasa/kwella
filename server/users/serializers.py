@@ -31,3 +31,14 @@ class LoginSerializer(TokenObtainPairSerializer):
             if key != 'id':
                 token[key] = value
         return token
+
+
+class VerifyOTPSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = get_user_model()
+        fields = '__all__'
+    
+    def update(self, instance, validated_data):
+        print(f'{validated_data}')
+        return super().update(instance, validated_data)
