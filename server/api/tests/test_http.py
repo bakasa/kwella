@@ -24,7 +24,7 @@ def create_user(phone_number='0712345689', password=PASSWORD, usertype='RIDER', 
 class AuthenticationTest(APITestCase):
     # AUTHENTICATION PROCESS: SIGNUP -> SEND OTP VIA SMS TO USER -> USER CONFRIMS OTP -> ACCOUNT ACTIVATED  
     def test_owner_can_signup(self):
-        response = self.client.post(reverse('signup'), data={
+        response = self.client.post(reverse('api:signup'), data={
             'phone_number': '1111111111',
             'first_name': 'Kendrick',
             'last_name': 'Lamar',
@@ -41,7 +41,7 @@ class AuthenticationTest(APITestCase):
         self.assertEqual(response.data['type'], 'OWNER')
 
     def test_driver_can_signup(self):
-        response = self.client.post(reverse('signup'), data={
+        response = self.client.post(reverse('api:signup'), data={
             'phone_number': '0712345689',
             'first_name': 'Kendrick',
             'last_name': 'Lamar',
@@ -58,7 +58,7 @@ class AuthenticationTest(APITestCase):
         self.assertEqual(response.data['type'], 'DRIVER')
 
     def test_rider_can_signup(self):
-        response = self.client.post(reverse('signup'), data={
+        response = self.client.post(reverse('api:signup'), data={
             'phone_number': '0712345689',
             'first_name': 'Kendrick',
             'last_name': 'Lamar',
@@ -79,7 +79,7 @@ class AuthenticationTest(APITestCase):
         user = create_user() 
         
         # login with created user credentials 
-        response = self.client.post(reverse('login'), data={
+        response = self.client.post(reverse('api:login'), data={
             'phone_number': user.phone_number,
             'password': PASSWORD
         })
@@ -104,15 +104,34 @@ class AuthenticationTest(APITestCase):
 
     def test_user_can_verify_otp(self):
         # signup user
-        user_signup = self.client.post(reverse('signup'), data={
+        user_signup = self.client.post(reverse('api:signup'), data={
             'phone_number': '8888888888',
             'type': 'DRIVER',
             'password': PASSWORD,
             'confirm_password': PASSWORD
         })
 
-        # retrieve user
+        # retrieve in active user
         user = get_user_model().objects.last()
 
-        # confirm user is in_active
-        self.assertFalse(user.is_active)
+        # OTP from sms
+        generated_otp = input('Enter OTP: ')
+
+        # print('generated OTP', generated_otp)
+
+        # verify user OTP && activate account
+        response = self.client.patch(reverse('api:verify-otp', kwargs={'pk': user.id }), data={
+            'verify_otp': generated_otp,
+            # 'phone_number': '999999999',
+            # 'type': 'DRIVER',
+            # 'password': PASSWORD,
+            # 'confirm_password': PASSWORD
+
+        })
+
+        # import pdb; pdb.set_trace()
+
+        # retrieve active user
+        # user = get_user_model().objects.last()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

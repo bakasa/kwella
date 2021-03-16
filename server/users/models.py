@@ -1,6 +1,7 @@
+import random
 from datetime import datetime
 
-import pytz, random
+import pytz
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
@@ -28,21 +29,30 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'phone_number'
     REQUIRED_FIELDS = []
 
+    generated_otp = models.IntegerField(_("OTP"), blank=True, null=True)
+
     objects = CustomUserManager()
 
-    def generate_otp(self):
+    def handle_otp(self, sent_otp=None):
         '''
-        Generate OTP to send to user's phone number. The token expires after 5 minutes if not verified.
+        If opt_token is None, generate OTP to send to user's phone number. 
+        If sent_otp is not None, validate OTP token.
+        The generated token expires after 5 minutes if not verified.
         '''
         
-        totp = TOTP(key=bytes(settings.SECRET_KEY, encoding='utf-8'), t0=(int(datetime.now(tz=pytz.UTC).timestamp()) - random.randint(10000, 100000)), digits=5, step=300)
+        totp = TOTP(key=bytes('settings.SECRET_KEY', encoding='utf-8'), t0=(int(datetime.now(tz=pytz.UTC).timestamp()) - random.randint(10000, 100000)), digits=5, step=300)
 
-        # totp.t()
+        if sent_otp is None:
+            # create new otp token
+            print(f'\nsent is None: {totp.token()}\n')
+            return totp
         
-        return totp.token()
+        print(f'\nsent is NOT None: {totp.token()}\n')
+        return totp.verify(sent_otp)
+        
 
     def __str__(self):
-        return f'{self.phone_number} - {self.type}'
+        return f'{self.phone_number} - {self.type} - {self.id}'
     
 #### CREATE PROXY MODELS ####
 class Owner(User):

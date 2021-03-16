@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-
+import asyncio
 
 class UserSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
@@ -18,6 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
     
     def create(self, validated_data):
+        
         # remove password confirmation
         confirm_password = validated_data.pop('confirm_password', None)
         return super().create(validated_data)
@@ -34,11 +35,12 @@ class LoginSerializer(TokenObtainPairSerializer):
 
 
 class VerifyOTPSerializer(serializers.ModelSerializer):
+
+    # def update(self, instance, validated_data):
+    #     print(f'Updating {instance.phone_number} with {validated_data}')
+    #     return super().update(instance, validated_data)
     
     class Meta:
         model = get_user_model()
         fields = '__all__'
     
-    def update(self, instance, validated_data):
-        print(f'{validated_data}')
-        return super().update(instance, validated_data)
