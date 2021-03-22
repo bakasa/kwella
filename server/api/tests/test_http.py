@@ -3,13 +3,15 @@ import json
 
 from django.contrib.auth import get_user_model
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
 from rest_framework.reverse import reverse
-from rest_framework.test import APITestCase
+from rest_framework.test import APIClient, APITestCase
+from sendsms import api
 from users.models import Driver, Owner, Rider
 
 PASSWORD = 'ilovethispassword'
 
-def create_user(phone_number='0712345689', password=PASSWORD, usertype='RIDER', fname='Will', lname='Smith'):
+def create_user(phone_number='0000000000', password=PASSWORD, usertype='RIDER', fname='Will', lname='Smith'):
     '''
     Helper function to ensure the code is DRY
     '''
@@ -22,7 +24,12 @@ def create_user(phone_number='0712345689', password=PASSWORD, usertype='RIDER', 
     )
 
 class AuthenticationTest(APITestCase):
-    # AUTHENTICATION PROCESS: SIGNUP -> SEND OTP VIA SMS TO USER -> USER CONFRIMS OTP -> ACCOUNT ACTIVATED  
+
+    client = APIClient()
+    # def setUp(self):
+    #     create_user()
+    #     return super().setUp()
+
     def test_owner_can_signup(self):
         response = self.client.post(reverse('api:signup'), data={
             'phone_number': '1111111111',
@@ -42,7 +49,7 @@ class AuthenticationTest(APITestCase):
 
     def test_driver_can_signup(self):
         response = self.client.post(reverse('api:signup'), data={
-            'phone_number': '0712345689',
+            'phone_number': '2222222222',
             'first_name': 'Kendrick',
             'last_name': 'Lamar',
             'type': 'DRIVER',
@@ -59,7 +66,7 @@ class AuthenticationTest(APITestCase):
 
     def test_rider_can_signup(self):
         response = self.client.post(reverse('api:signup'), data={
-            'phone_number': '0712345689',
+            'phone_number': '3333333333',
             'first_name': 'Kendrick',
             'last_name': 'Lamar',
             'type': 'RIDER',
@@ -74,64 +81,46 @@ class AuthenticationTest(APITestCase):
         self.assertEqual(response.data['last_name'], user.last_name)
         self.assertEqual(response.data['type'], 'RIDER')
 
-    def test_user_can_login(self):
-        # create user
-        user = create_user() 
-        
-        # login with created user credentials 
-        response = self.client.post(reverse('api:login'), data={
-            'phone_number': user.phone_number,
-            'password': PASSWORD
-        })
-
-        # import pdb
-        # pdb.set_trace()
+    # def test_user_can_login(self):
+    #     user = get_user_model().objects.last()
 
 
-        # parse payload data from access token
-        # # access = response.data['access']
-        # header, payload, signiture = access.split('.')
-        # decoded_payload = base64.b64decode(f'{payload}==')
-        # payload_data = json.loads(decoded_payload)
+    #     # login with created user credentials 
+    #     response = self.client.post(reverse('api:login'), data={
+    #         'phone_number': user.phone_number,
+    #         'password': 'passed'
+    #     }, format='json')
 
-        # self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # self.assertIsNotNone(response.data['refresh'])
-        # self.assertEqual(payload_data['id'], user.id)
-        # self.assertEqual(payload_data['phone_number'], user.phone_number)
-        # self.assertEqual(payload_data['first_name'], user.first_name)
-        # self.assertEqual(payload_data['last_name'], user.last_name)
-        # self.assertEqual(payload_data['type'], user.last_name)
+    #     # import pdb
+    #     # pdb.set_trace()
+
+
+    #     # parse payload data from access token
+    #     access = response.data['access']
+    #     header, payload, signiture = access.split('.')
+    #     decoded_payload = base64.b64decode(f'{payload}==')
+    #     payload_data = json.loads(decoded_payload)
+
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #     self.assertIsNotNone(response.data['refresh'])
+    #     self.assertEqual(payload_data['id'], user.id)
+    #     self.assertEqual(payload_data['phone_number'], user.phone_number)
+    #     self.assertEqual(payload_data['first_name'], user.first_name)
+    #     self.assertEqual(payload_data['last_name'], user.last_name)
+    #     self.assertEqual(payload_data['type'], user.last_name)
 
     def test_user_can_verify_otp(self):
-        # signup user
-        user_signup = self.client.post(reverse('api:signup'), data={
-            'phone_number': '8888888888',
-            'type': 'DRIVER',
-            'password': PASSWORD,
-            'confirm_password': PASSWORD
-        })
 
-        # retrieve in active user
-        user = get_user_model().objects.last()
-
-        # OTP from sms
-        generated_otp = input('Enter OTP: ')
-
-        # print('generated OTP', generated_otp)
-
-        # verify user OTP && activate account
-        response = self.client.patch(reverse('api:verify-otp', kwargs={'pk': user.id }), data={
-            'verify_otp': generated_otp,
-            # 'phone_number': '999999999',
-            # 'type': 'DRIVER',
-            # 'password': PASSWORD,
-            # 'confirm_password': PASSWORD
-
-        })
-
-        # import pdb; pdb.set_trace()
-
-        # retrieve active user
+        # retrieve in unverified user
+        user = create_user()
         # user = get_user_model().objects.last()
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # recieve sent token
+        recieved_otp = input('\nEnter your otp: ')
+
+        # # verify user OTP && activate account
+        send_with_opt = self.client.patch(reverse('api:verify-otp', kwargs={'pk': user.id }), data={
+            'verify_otp': recieved_otp,
+        })
+
+        

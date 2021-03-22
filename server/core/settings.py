@@ -181,4 +181,5 @@ SIMPLE_JWT = {
 }
 
 # SEND SMS
-# SENDSMS_BACKEND = 'sendsms.backends.console.SmsBackend' (default: 'sendsms.backends.console.SmsBackend')
+SENDSMS_BACKEND = 'sendsms.backends.console.SmsBackend' #(default: 'sendsms.backends.console.SmsBackend')
+CALLER_ID = env('PHONE_NUMBER')

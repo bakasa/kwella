@@ -13,6 +13,7 @@ from .managers import (CustomUserManager, DriverManager, OwnerManager,
                        RiderManager)
 
 
+
 class User(AbstractBaseUser, PermissionsMixin):
     class Types(models.TextChoices):
         DRIVER = ('DRIVER', 'Driver')
@@ -21,35 +22,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     first_name = models.CharField(_("First Name"), max_length=50, null=True, blank=True)
     last_name = models.CharField(_("Last Name"), max_length=50, null=True, blank=True)
-    phone_number = models.CharField(_("Phone Number"), max_length=10, unique=True)
+    phone_number = phone_number = models.CharField(_("Phone Number"), max_length=10, unique=True)
     is_staff = models.BooleanField(_("Staff"), default=False)
     is_active = models.BooleanField(_("Active"), default=False)
+    otp = models.IntegerField(_("OTP"), null=True, blank=True)
     date_joined = models.DateTimeField(_("Date Joined"), default=timezone.now)
     type=models.CharField(_("User Type"), max_length=50, choices=Types.choices, default=Types.RIDER)
     USERNAME_FIELD = 'phone_number'
     REQUIRED_FIELDS = []
 
-    generated_otp = models.IntegerField(_("OTP"), blank=True, null=True)
-
-    objects = CustomUserManager()
-
-    def handle_otp(self, sent_otp=None):
-        '''
-        If opt_token is None, generate OTP to send to user's phone number. 
-        If sent_otp is not None, validate OTP token.
-        The generated token expires after 5 minutes if not verified.
-        '''
-        
-        totp = TOTP(key=bytes('settings.SECRET_KEY', encoding='utf-8'), t0=(int(datetime.now(tz=pytz.UTC).timestamp()) - random.randint(10000, 100000)), digits=5, step=300)
-
-        if sent_otp is None:
-            # create new otp token
-            print(f'\nsent is None: {totp.token()}\n')
-            return totp
-        
-        print(f'\nsent is NOT None: {totp.token()}\n')
-        return totp.verify(sent_otp)
-        
+    objects = CustomUserManager()        
 
     def __str__(self):
         return f'{self.phone_number} - {self.type} - {self.id}'
