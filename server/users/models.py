@@ -22,10 +22,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     first_name = models.CharField(_("First Name"), max_length=50, null=True, blank=True)
     last_name = models.CharField(_("Last Name"), max_length=50, null=True, blank=True)
-    phone_number = phone_number = models.CharField(_("Phone Number"), max_length=10, unique=True)
+    phone_number = models.CharField(_("Phone Number"), max_length=10, unique=True)
     is_staff = models.BooleanField(_("Staff"), default=False)
     is_active = models.BooleanField(_("Active"), default=False)
-    otp = models.IntegerField(_("OTP"), null=True, blank=True)
+    # otp = models.IntegerField(_("OTP"), null=True, blank=True)
     date_joined = models.DateTimeField(_("Date Joined"), default=timezone.now)
     type=models.CharField(_("User Type"), max_length=50, choices=Types.choices, default=Types.RIDER)
     USERNAME_FIELD = 'phone_number'
