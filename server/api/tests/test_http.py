@@ -7,7 +7,10 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient, APITestCase
 from sendsms import api
+from trips.models import Trip
+from trips.serializers import TripSerializer
 from users.models import Driver, Owner, Rider
+from users.serializers import UserSerializer
 
 PASSWORD = 'ilovethispassword'
 
@@ -28,7 +31,7 @@ class AuthenticationTest(APITestCase):
 
     client = APIClient()
 
-    def setUp(cls):
+    def setUp(self):
         create_user()
         return super().setUp()
 
@@ -109,3 +112,42 @@ class AuthenticationTest(APITestCase):
         self.assertEqual(payload_data['first_name'], user.first_name)
         self.assertEqual(payload_data['last_name'], user.last_name)
         self.assertEqual(payload_data['type'], user.type)
+
+class HttpTripsTest(APITestCase):
+    client = APIClient()
+
+    def setUp(self):
+        user = create_user()
+        response = self.client.post(reverse('api:login'), data={'phone_number': user.phone_number, 'password': PASSWORD})
+
+        self.access = response.data['access']
+
+        # force authenticate user
+        self.client.force_authenticate(user=user, token=self.access)
+
+        # create trips
+        Trip.objects.create(pickup='A', dropoff='B')
+        Trip.objects.create(pickup='B', dropoff='C')
+        return super().setUp()
+    
+    def test_user_list_trips(self):
+        trips = Trip.objects.all()
+
+        response = self.client.get(reverse('api:trips-list'))
+
+        expected_trip_ids = [str(trip.id) for trip in trips]
+        actual_trip_ids = [trip.get('id') for trip in response.data]
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertCountEqual(expected_trip_ids, actual_trip_ids)
+        self.assertEqual(len(response.data), trips.count())
+
+    def test_user_can_retrieve_single_trip(self):
+        trip = Trip.objects.last()
+
+        response = self.client.get(trip.get_absolute_url())
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data.get('id'), str(trip.id))
+
+

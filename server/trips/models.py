@@ -1,8 +1,11 @@
-from django.db import models
 import uuid
-from django.contrib.auth import get_user_model
+
 from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.db import models
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
+
 
 class Trip(models.Model):
 
@@ -20,11 +23,11 @@ class Trip(models.Model):
     updated = models.DateTimeField(_("Trip Updated On"), auto_now=True)
 
     def get_absolute_url(self):
-        return reverse("trip:trip-detail", kwargs={"id": self.id})
+        return reverse("api:trips-detail", kwargs={"id": self.id})
     
 
     def __str__(self):
-        return self.id
+        return str(self.id)
     
     
 
