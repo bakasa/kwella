@@ -9,6 +9,7 @@ from rest_framework import serializers, status
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from sendsms import api
 from django.conf import settings
+from django.contrib.auth import authenticate
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -41,9 +42,40 @@ class UserSerializer(serializers.ModelSerializer):
 class LoginSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
+
         token = super().get_token(user)
         user_data = UserSerializer(user).data
+
+        # add user data to the token payload (except user id)
         for key, value in user_data.items():
             if key != 'id':
                 token[key] = value
         return token
+
+    # def validate(self, data):
+    #     return super().validate(data)
+
+# class LoginSerializer(serializers.Serializer):
+
+#     phone_number = serializers.CharField(max_length=255)
+#     password = serializers.CharField(max_length=128, write_only=True)
+
+#     def validate(self, attrs):
+#         phone_number = attrs.get("phone_number", None)
+#         password = attrs.get("password", None)
+
+
+#         try:
+#             user = authenticate(phone_number=phone_number, password=password)
+#             print(f'\nLOGIN DATA: {user}\n')
+
+#             if user is None:
+#                 raise serializers.ValidationError(
+#                     'A user with this phone_number and password is not found.'
+#                 )
+
+#         except get_user_model().DoesNotExist:
+#             raise serializers.ValidationError(
+#                 'User with given phone_number and password does not exists'
+#             )
+#         return super().validate(attrs)

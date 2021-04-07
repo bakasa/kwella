@@ -9,6 +9,6 @@ app_name = 'api'
 urlpatterns = [
     path('signup/', SignUpView.as_view(), name='signup'),
     path('login/', LoginView.as_view(), name='login'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='refresh-token'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='refresh-token'), #generates new access token for valid refresh token
     
 ]

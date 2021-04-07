@@ -19,3 +19,4 @@ class VerifyOTPView(generics.UpdateAPIView):
 
 class LoginView(TokenObtainPairView):
     serializer_class = LoginSerializer
+    
