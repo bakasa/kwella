@@ -109,18 +109,18 @@ class AuthenticationTest(APITestCase):
     #     self.assertEqual(payload_data['last_name'], user.last_name)
     #     self.assertEqual(payload_data['type'], user.last_name)
 
-    def test_user_can_verify_otp(self):
+    # def test_user_can_verify_otp(self):
 
-        # retrieve in unverified user
-        user = create_user()
-        # user = get_user_model().objects.last()
+    #     # retrieve in unverified user
+    #     user = create_user()
+    #     # user = get_user_model().objects.last()
 
-        # recieve sent token
-        recieved_otp = input('\nEnter your otp: ')
+    #     # recieve sent token
+    #     recieved_otp = input('\nEnter your otp: ')
 
-        # # verify user OTP && activate account
-        send_with_opt = self.client.patch(reverse('api:verify-otp', kwargs={'pk': user.id }), data={
-            'verify_otp': recieved_otp,
-        })
+    #     # # verify user OTP && activate account
+    #     send_with_opt = self.client.patch(reverse('api:verify-otp', kwargs={'pk': user.id }), data={
+    #         'verify_otp': recieved_otp,
+    #     })
 
         

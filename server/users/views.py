@@ -12,8 +12,9 @@ class SignUpView(generics.CreateAPIView):
     serializer_class = UserSerializer
 
 class VerifyOTPView(generics.UpdateAPIView):
-    queryset = get_user_model()
-    serializer_class = UserSerializer
+    # queryset = get_user_model()
+    # serializer_class = UserSerializer
+    pass
 
 
 class LoginView(TokenObtainPairView):
