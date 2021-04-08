@@ -162,7 +162,7 @@ CHANNEL_LAYER = {
     }
 }
 
-ASGI_APPLICATION = 'core.routing.application'
+ASGI_APPLICATION = 'core.asgi.application'
 
 
 # REST FRAMEWORK SETTINGS
