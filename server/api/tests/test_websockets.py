@@ -1,11 +1,16 @@
-import pytest
-from channels.layers import get_channel_layer
-from channels.testing import WebsocketCommunicator
-from core.asgi import application
-from django.contrib.auth import get_user_model
-from rest_framework_simplejwt.tokens import AccessToken
-from channels.db import database_sync_to_async
 import json
+
+import pytest
+from channels.db import database_sync_to_async
+from channels.generic.websocket import AsyncJsonWebsocketConsumer
+from channels.layers import get_channel_layer
+from channels.routing import URLRouter
+from channels.testing import WebsocketCommunicator
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AnonymousUser
+from django.urls import path
+from django_channels_jwt_auth_middleware.auth import JWTAuthMiddlewareStack
+from rest_framework_simplejwt.tokens import AccessToken
 
 # overwrite the application's settings to use InMemoryChannelLayer instead of
 # the configured RedisChannelLayer
@@ -14,6 +19,45 @@ TEST_CHANNEL_LAYERS = {
         'BACKEND': 'channels.layers.InMemoryChannelLayer',
     },
 }
+
+# test consumer
+class TestConsumer(AsyncJsonWebsocketConsumer):
+
+    async def connect(self):
+        user = self.scope['user']
+        if isinstance(user, AnonymousUser):
+            return await self.close()
+
+        await self.channel_layer.group_add(
+            group='test',
+            channel=self.channel_name
+        )
+
+        return await super().connect()
+
+    async def receive_json(self, content, **kwargs):
+        message_type = content.get('type')
+        if (message_type == 'echo.message'):
+            await self.send_json({
+                "type": message_type,
+                "data": content.get("data")
+            })
+        return await super().receive_json(content, **kwargs)
+
+    async def echo_message(self, message):
+        await self.send_json({
+            'type': message.get('type'),
+            'data': message.get('data')
+        })
+
+    async def disconnect(self, code):
+        await self.channel_layer.group_discard(
+            group='test',
+            channel=self.channel_name
+        )
+        return await super().disconnect(code)
+# pytest warning about test collection
+TestConsumer.__test__ = False
 
 @database_sync_to_async
 def create_user(phone_number, password):
@@ -36,6 +80,12 @@ class TestWebSocket:
         settings.CHANNEL_LAYERS = TEST_CHANNEL_LAYERS
         user, access = await create_user('0731245689', 'ilovethispassword')
 
+        application = JWTAuthMiddlewareStack(
+            URLRouter([
+                path('ws/trip/', TestConsumer.as_asgi()),
+            ])
+        )
+        
         communicator = WebsocketCommunicator(
             application=application,
             path=f'ws/trip/?token={access}'
@@ -48,6 +98,12 @@ class TestWebSocket:
     async def test_can_send_and_recieve_message(self, settings):
         settings.CHANNEL_LAYERS = TEST_CHANNEL_LAYERS
         user, access = await create_user('0731245689', 'ilovethispassword')
+
+        application = JWTAuthMiddlewareStack(
+            URLRouter([
+                path('ws/trip/', TestConsumer.as_asgi()),
+            ])
+        )
 
         communicator = WebsocketCommunicator(
             application=application,
@@ -70,6 +126,12 @@ class TestWebSocket:
         
         user, access = await create_user('0731245689', 'ilovethispassword')
 
+        application = JWTAuthMiddlewareStack(
+            URLRouter([
+                path('ws/trip/', TestConsumer.as_asgi()),
+            ])
+        )
+
         communicator = WebsocketCommunicator(
             application=application,
             path=f'ws/trip/?token={access}'
@@ -89,6 +151,14 @@ class TestWebSocket:
 
     async def test_cannot_connect_to_socket_without_valid_token(self, settings):
         settings.CHANNEL_LAYERS = TEST_CHANNEL_LAYERS
+
+        user, access = await create_user('0731245689', 'ilovethispassword')
+
+        application = JWTAuthMiddlewareStack(
+            URLRouter([
+                path('ws/trip/', TestConsumer.as_asgi()),
+            ])
+        )
 
         communicator = WebsocketCommunicator(
             application=application,
