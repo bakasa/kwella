@@ -2,6 +2,7 @@ import base64
 import json
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.reverse import reverse
@@ -32,6 +33,12 @@ class AuthenticationTest(APITestCase):
 
     def setUp(self):
         create_user()
+        
+        # users groups
+        Group.objects.create(name='owners')
+        Group.objects.create(name='riders')
+        Group.objects.create(name='drivers')
+
         return super().setUp()
 
     def test_owner_can_signup(self):
@@ -45,11 +52,14 @@ class AuthenticationTest(APITestCase):
         })
 
         user = get_user_model().objects.last()
+        # import pdb; pdb.set_trace()
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['id'], user.id)
         self.assertEqual(response.data['first_name'], user.first_name)
         self.assertEqual(response.data['last_name'], user.last_name)
         self.assertEqual(response.data['type'], 'OWNER')
+        # self.assertEqual(response.data['group'], 'owners')
 
     def test_driver_can_signup(self):
         response = self.client.post(reverse('api:signup'), data={
@@ -67,6 +77,7 @@ class AuthenticationTest(APITestCase):
         self.assertEqual(response.data['first_name'], user.first_name)
         self.assertEqual(response.data['last_name'], user.last_name)
         self.assertEqual(response.data['type'], 'DRIVER')
+        # self.assertEqual(response.data['group'], 'drivers')
 
     def test_rider_can_signup(self):
         response = self.client.post(reverse('api:signup'), data={
@@ -84,6 +95,7 @@ class AuthenticationTest(APITestCase):
         self.assertEqual(response.data['first_name'], user.first_name)
         self.assertEqual(response.data['last_name'], user.last_name)
         self.assertEqual(response.data['type'], 'RIDER')
+        # self.assertEqual(response.data['group'], 'riders')
 
     def test_user_can_login(self):
         user = get_user_model().objects.last()

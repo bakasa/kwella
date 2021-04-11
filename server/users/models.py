@@ -29,10 +29,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'phone_number'
     REQUIRED_FIELDS = []
 
-    @property
-    def group(self):
-        return self.groups.first().name
-
     objects = CustomUserManager()        
 
     def __str__(self):
@@ -53,10 +49,6 @@ class Owner(User):
         # allow taxi owner to access admin site
         self.is_staff = True
 
-        # add to OWNERS group
-        owners = Group.objects.get(name='owners')
-        self.groups.add(owners)
-
         # if no user exist, set default type
         if not self.pk:
             self.type = User.Types.OWNER
@@ -74,10 +66,6 @@ class Driver(User):
     
     def save(self, *args, **kwargs):
 
-        # add to DRIVERS group
-        drivers = Group.objects.get(name='drivers')
-        self.groups.add(drivers)
-
         # if no user exist, set default type
         if not self.pk:
             self.type = User.Types.DRIVER
@@ -94,10 +82,6 @@ class Rider(User):
         proxy = True
     
     def save(self, *args, **kwargs):
-
-        # add to RIDERS group
-        riders = Group.objects.get(name='riders')
-        self.groups.add(riders)
 
         # if no user exist, set default type
         if not self.pk:
