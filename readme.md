@@ -38,4 +38,4 @@ A driver and owner will negotiate the terms of their partnership outside the app
 
 ### WHAT CAN THE TAXI OWNER DO?
 
-The taxi owner can see all the trips (_normal_ and _special_) accepted by the driver throughout the day, with a total estimation of how much the driver should bring by the end of the day. If the taxi owner is not pleased with the driver's performance, the taxi owner can de-assign the driver from a taxi. Both the driver and the owner can (optionally) rate each other on a monthly basis or at the end of their partnership. This rating is crucial in helping others descide who to partner with (as a driver or owner).
+The taxi owner can see all the trips (_normal_ and _special_) accepted by the driver throughout the day, with a total estimation of how much the driver should bring by the end of the day. If the taxi owner is not pleased with the driver's performance, the taxi owner can de-assign the driver from a taxi. Both the driver and the owner can (optionally) rate each other on a monthly basis or at the end of their partnership. This rating is crucial in helping others decide who to partner with (as a driver or owner).
