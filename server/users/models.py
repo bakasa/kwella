@@ -29,6 +29,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'phone_number'
     REQUIRED_FIELDS = []
 
+    @property
+    def group(self):
+        return self.groups.first().name
+
     objects = CustomUserManager()        
 
     def __str__(self):

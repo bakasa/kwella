@@ -5,12 +5,12 @@ from django.contrib.auth import get_user_model
 @admin.register(get_user_model())
 class CustomUserAdmin(UserAdmin):
 
-    list_display = ('first_name', 'last_name', 'phone_number', 'type', 'is_active')
+    list_display = ('first_name', 'last_name', 'phone_number', 'type', 'group', 'is_active')
     list_filter = ('first_name', 'last_name', 'phone_number', 'type', 'is_active')
     fieldsets = (
         (None, {
             "fields": (
-                'first_name', 'last_name', 'phone_number', 'type', 'password'
+                'first_name', 'last_name', 'phone_number', 'type', 'group', 'password'
             ),
         }),
         ('Permissions', {'fields': ('is_staff', 'is_active')})
@@ -20,7 +20,7 @@ class CustomUserAdmin(UserAdmin):
         (None, {
             'classes': ('wide', ),
             "fields": (
-                'first_name', 'last_name', 'phone_number', 'type', 'password1', 'password2', 'is_active', 'is_staff'
+                'first_name', 'last_name', 'phone_number', 'type', 'group', 'password1', 'password2', 'is_active', 'is_staff'
             ),
         }),
     )
