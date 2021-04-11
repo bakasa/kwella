@@ -18,6 +18,8 @@ class Trip(models.Model):
     pickup = models.CharField(_("Pickup Address"), max_length=255)
     dropoff = models.CharField(_("Drop-off Address"), max_length=255)
     status = models.CharField(_("Trips Status"), max_length=20, choices=Transitions.choices, default=Transitions.REQUESTED)
+    rider = models.ForeignKey("users.Rider", verbose_name=_("Trip Rider"), on_delete=models.DO_NOTHING, blank=True, null=True, related_name='rider')
+    driver = models.ForeignKey("users.Driver", verbose_name=_("Trip Driver"), on_delete=models.DO_NOTHING, blank=True, null=True, related_name='driver')
     created = models.DateTimeField(_("Trip Created On"), auto_now_add=True)
     updated = models.DateTimeField(_("Trip Updated On"), auto_now=True)
 
