@@ -8,7 +8,6 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Trip(models.Model):
-
     class Transitions(models.TextChoices):
         REQUESTED = ('REQUESTED', 'requested')
         STARTED = ('STARTED', 'started')
