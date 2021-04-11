@@ -6,7 +6,6 @@ from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient, APITestCase
-from sendsms import api
 from trips.models import Trip
 from trips.serializers import TripSerializer
 from users.models import Driver, Owner, Rider
