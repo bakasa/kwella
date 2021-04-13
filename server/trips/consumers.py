@@ -18,6 +18,14 @@ class TripConsumer(AsyncJsonWebsocketConsumer):
     @database_sync_to_async
     def _get_trip_data(self, trip):
         return DetailedTripSerializer(trip).data
+    
+    @database_sync_to_async
+    def _get_trip_ids(self, user):
+        if user.type == 'DRIVER':
+            trip_ids = user.trips_as_driver.exclude(status='COMPLETED').only('id').values_list('id', flat=True)
+        elif user.type == 'RIDER':
+            trip_ids = user.trips_as_rider.exclude(status='COMPLETED').only('id').values_list('id', flat=True)
+        return map(str, trip_ids)
 
     async def connect(self):
         user = self.scope['user']
@@ -29,6 +37,15 @@ class TripConsumer(AsyncJsonWebsocketConsumer):
                     group='drivers',
                     channel=self.channel_name
                 )
+            
+            # on Websocket connection
+            # add user to all existing trip groups, they're associated with
+            for trip_id in await self._get_trip_ids(user):
+                await self.channel_layer.group_add(
+                    group=trip_id,
+                    channel=self.channel_name
+                )
+
             await self.accept()
             
     async def receive_json(self, content, **kwargs):
@@ -44,6 +61,21 @@ class TripConsumer(AsyncJsonWebsocketConsumer):
         data = message.get('data')
         trip = await self._create_trip(data)
         trip_data = await self._get_trip_data(trip)
+
+        # broadcast ride request to all drivers
+        await self.channel_layer.group_send(
+            group='drivers',
+            message={
+                'type': 'echo.message',
+                'data': trip_data
+            }
+        )
+
+        # add rider to trip group
+        await self.channel_layer.group_add(
+            group=f'{trip.id}',
+            channel=self.channel_name
+        )
         
         await self.send_json({
             'type': 'echo.message',
@@ -64,5 +96,14 @@ class TripConsumer(AsyncJsonWebsocketConsumer):
                     group='drivers',
                     channel=self.channel_name
                 )
+            
+            # on Websocket connection
+            # add user to all existing trip groups, they're associated with
+            for trip_id in await self._get_trip_ids(user):
+                await self.channel_layer.group_discard(
+                    group=trip_id,
+                    channel=self.channel_name
+                )
+
             await super().disconnect(code)
  
