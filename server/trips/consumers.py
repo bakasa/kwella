@@ -31,7 +31,6 @@ class TripConsumer(AsyncJsonWebsocketConsumer):
                 )
             await self.accept()
             
-
     async def receive_json(self, content, **kwargs):
         message_type = content.get('type')
         if message_type == 'create.trip':
