@@ -91,7 +91,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
-
+ASGI_APPLICATION = 'core.routing.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -163,7 +163,7 @@ CHANNEL_LAYER = {
     }
 }
 
-ASGI_APPLICATION = 'core.asgi.application'
+
 
 
 # REST FRAMEWORK SETTINGS

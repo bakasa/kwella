@@ -9,8 +9,8 @@ from .models import Trip
 
 @admin.register(Trip)
 class TripAdmin(admin.ModelAdmin):
-    fields = ('id', 'pickup', 'dropoff', 'status', 'created', 'updated',)
-    list_display = ('id', 'pickup', 'dropoff', 'status', 'created', 'updated',)
+    fields = ('id', 'pickup', 'dropoff', 'status', 'rider', 'driver', 'created', 'updated',)
+    list_display = ('id', 'pickup', 'dropoff', 'status', 'rider', 'driver', 'created', 'updated',)
     list_filter = ('status', )
     readonly_fields = ('id', 'created', 'updated')
 
