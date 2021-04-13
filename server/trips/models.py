@@ -11,7 +11,7 @@ class Trip(models.Model):
     class Transitions(models.TextChoices):
         REQUESTED = ('REQUESTED', 'requested')
         STARTED = ('STARTED', 'started')
-        IN_PROGRESS = ('IN_PROGRESS', 'in_progress')
+        PROGRESSING = ('PROGRESSING', 'progressing')
         COMPLETED = ('COMPLETED', 'completed')
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
