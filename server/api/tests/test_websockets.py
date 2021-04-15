@@ -8,6 +8,7 @@ from core.asgi import application
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import AccessToken
 from trips.models import Trip
+from trips.textchoices import TripStatus
 
 # overwrite the application's settings to use InMemoryChannelLayer instead of
 # the configured RedisChannelLayer
@@ -281,7 +282,7 @@ class TestWebSocket:
                 'id': str(trip.id),
                 'pickup': trip.pickup,
                 'dropoff': trip.dropoff,
-                'status': Trip.Transitions.PROGRESSING.name,
+                'status': TripStatus.in_progress.value,
                 'driver': str(driver.id),
             },
         }

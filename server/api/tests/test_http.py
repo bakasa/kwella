@@ -1,8 +1,12 @@
 import base64
 import json
+import pdb
+from io import BytesIO
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from django.core.files.uploadedfile import SimpleUploadedFile
+from PIL import Image
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.reverse import reverse
@@ -11,6 +15,7 @@ from trips.models import Trip
 from trips.serializers import TripSerializer
 from users.models import Driver, Owner, Rider
 from users.serializers import UserSerializer
+from users.textchoices import UserTypes
 
 PASSWORD = 'ilovethispassword'
 
@@ -27,12 +32,17 @@ def create_user(phone_number='0000000000', password=PASSWORD, usertype='RIDER', 
         is_active=True
     )
 
-class AuthenticationTest(APITestCase):
+def create_photo_file():
+    data = BytesIO()
+    Image.new('RGB', (100, 100)).save(data, 'PNG')
+    data.seek(0)
 
-    client = APIClient()
+    return SimpleUploadedFile('photo.png', data.getvalue())
+class AuthenticationTest(APITestCase):
 
     def setUp(self):
         create_user()
+        self.photo_file = create_photo_file()
         
         # users groups
         Group.objects.create(name='owners')
@@ -48,7 +58,8 @@ class AuthenticationTest(APITestCase):
             'last_name': 'Lamar',
             'type': 'OWNER',
             'password': PASSWORD,
-            'confirm_password': PASSWORD
+            'confirm_password': PASSWORD,
+            'photo': self.photo_file
         })
 
         user = get_user_model().objects.last()
@@ -59,6 +70,7 @@ class AuthenticationTest(APITestCase):
         self.assertEqual(response.data['first_name'], user.first_name)
         self.assertEqual(response.data['last_name'], user.last_name)
         self.assertEqual(response.data['type'], 'OWNER')
+        self.assertIsNotNone(user.photo)
         # self.assertEqual(response.data['group'], 'owners')
 
     def test_driver_can_signup(self):
@@ -68,7 +80,8 @@ class AuthenticationTest(APITestCase):
             'last_name': 'Lamar',
             'type': 'DRIVER',
             'password': PASSWORD,
-            'confirm_password': PASSWORD
+            'confirm_password': PASSWORD,
+            'photo': self.photo_file
         })
 
         user = get_user_model().objects.last()
@@ -77,6 +90,7 @@ class AuthenticationTest(APITestCase):
         self.assertEqual(response.data['first_name'], user.first_name)
         self.assertEqual(response.data['last_name'], user.last_name)
         self.assertEqual(response.data['type'], 'DRIVER')
+        self.assertIsNotNone(user.photo)
         # self.assertEqual(response.data['group'], 'drivers')
 
     def test_rider_can_signup(self):
@@ -86,7 +100,8 @@ class AuthenticationTest(APITestCase):
             'last_name': 'Lamar',
             'type': 'RIDER',
             'password': PASSWORD,
-            'confirm_password': PASSWORD
+            'confirm_password': PASSWORD,
+            'photo': self.photo_file
         })
 
         user = get_user_model().objects.last()
@@ -95,6 +110,7 @@ class AuthenticationTest(APITestCase):
         self.assertEqual(response.data['first_name'], user.first_name)
         self.assertEqual(response.data['last_name'], user.last_name)
         self.assertEqual(response.data['type'], 'RIDER')
+        self.assertIsNotNone(user.photo)
         # self.assertEqual(response.data['group'], 'riders')
 
     def test_user_can_login(self):
@@ -128,21 +144,27 @@ class HttpTripsTest(APITestCase):
     client = APIClient()
 
     def setUp(self):
-        user = create_user()
-        response = self.client.post(reverse('api:login'), data={'phone_number': user.phone_number, 'password': PASSWORD})
+        # create driver
+        self.driver = create_user(usertype=UserTypes.driver.value, phone_number='0781234569')
 
-        self.access = response.data['access']
+        # create rider
+        self.rider = create_user()
+        rider_response = self.client.post(reverse('api:login'), data={'phone_number': self.rider.phone_number, 'password': PASSWORD})
 
-        # force authenticate user
-        self.client.force_authenticate(user=user, token=self.access)
+        self.access = rider_response.data['access']
+
+        # force authenticate rider
+        self.client.force_authenticate(user=self.rider, token=self.access)
 
         # create trips
-        Trip.objects.create(pickup='A', dropoff='B')
-        Trip.objects.create(pickup='B', dropoff='C')
+        Trip.objects.create(pickup='A', dropoff='B', rider=self.rider, driver=self.driver)
+        Trip.objects.create(pickup='E', dropoff='F', driver=self.driver)
+        Trip.objects.create(pickup='C', dropoff='D', rider=self.rider)
         return super().setUp()
     
     def test_user_list_trips(self):
-        trips = Trip.objects.all()
+        
+        trips = Trip.objects.filter(rider=self.rider)
 
         response = self.client.get(reverse('api:trips-list'))
 
@@ -154,10 +176,11 @@ class HttpTripsTest(APITestCase):
         self.assertEqual(len(response.data), trips.count())
 
     def test_user_can_retrieve_single_trip(self):
-        trip = Trip.objects.last()
+        trip = Trip.objects.filter(rider=self.rider).first()
 
         response = self.client.get(trip.get_absolute_url())
 
+        # pdb.set_trace()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data.get('id'), str(trip.id))
 
