@@ -3,29 +3,27 @@ from datetime import datetime
 
 import pytz
 from django.conf import settings
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, Group
+from django.contrib.auth.models import (AbstractBaseUser, Group,
+                                        PermissionsMixin)
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django_otp.oath import TOTP
 
-from .managers import (CustomUserManager, DriverManager, OwnerManager,RiderManager)
-
+from .managers import (CustomUserManager, DriverManager, OwnerManager, RiderManager)
+from .textchoices import UserTypes
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    class Types(models.TextChoices):
-        DRIVER = ('DRIVER', 'Driver')
-        OWNER = ('OWNER', 'Owner')
-        RIDER = ('RIDER', 'Rider')
 
     first_name = models.CharField(_("First Name"), max_length=50, null=True, blank=True)
     last_name = models.CharField(_("Last Name"), max_length=50, null=True, blank=True)
     phone_number = models.CharField(_("Phone Number"), max_length=10, unique=True)
+    photo = models.ImageField(_("Photo"), upload_to='photos', null=True, blank=True)
     is_staff = models.BooleanField(_("Staff"), default=False)
     is_active = models.BooleanField(_("Active"), default=False)
     date_joined = models.DateTimeField(_("Date Joined"), default=timezone.now)
-    type=models.CharField(_("User Type"), max_length=50, choices=Types.choices, default=Types.RIDER)
+    type=models.CharField(_("User Type"), max_length=50, choices=UserTypes.choices, default=UserTypes.rider)
     USERNAME_FIELD = 'phone_number'
     REQUIRED_FIELDS = []
 

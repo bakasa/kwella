@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from .textchoices import UserTypes
 
 
 class CustomUserManager(BaseUserManager):
@@ -55,7 +56,7 @@ class OwnerManager(models.Manager):
     '''
 
     def get_queryset(self):
-        return super().get_queryset().filter(type=get_user_model().Types.OWNER)
+        return super().get_queryset().filter(type=UserTypes.owner)
 
 
 class DriverManager(models.Manager):
@@ -64,7 +65,7 @@ class DriverManager(models.Manager):
     '''
 
     def get_queryset(self):
-        return super().get_queryset().filter(type=get_user_model().Types.DRIVER)
+        return super().get_queryset().filter(type=UserTypes.driver)
 
 
 class RiderManager(models.Manager):
@@ -73,4 +74,4 @@ class RiderManager(models.Manager):
     '''
 
     def get_queryset(self):
-        return super().get_queryset().filter(type=get_user_model().Types.RIDER)
+        return super().get_queryset().filter(type=UserTypes.rider)

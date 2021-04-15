@@ -5,19 +5,15 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from .textchoices import TripStatus
 
 
 class Trip(models.Model):
-    class Transitions(models.TextChoices):
-        REQUESTED = ('REQUESTED', 'requested')
-        STARTED = ('STARTED', 'started')
-        PROGRESSING = ('PROGRESSING', 'progressing')
-        COMPLETED = ('COMPLETED', 'completed')
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     pickup = models.CharField(_("Pickup Address"), max_length=255)
     dropoff = models.CharField(_("Drop-off Address"), max_length=255)
-    status = models.CharField(_("Trips Status"), max_length=20, choices=Transitions.choices, default=Transitions.REQUESTED)
+    status = models.CharField(_("Trips Status"), max_length=20, choices=TripStatus.choices, default=TripStatus.requested)
     rider = models.ForeignKey("users.Rider", verbose_name=_("Trip Rider"), on_delete=models.DO_NOTHING, blank=True, null=True, related_name='trips_as_rider')
     driver = models.ForeignKey("users.Driver", verbose_name=_("Trip Driver"), on_delete=models.DO_NOTHING, blank=True, null=True, related_name='trips_as_driver')
     created = models.DateTimeField(_("Trip Created On"), auto_now_add=True)
