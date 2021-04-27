@@ -1,6 +1,6 @@
 # KWELLA - The convenience-taxi hailing app ⚠️ 🚧 👷‍♂️
 
-## What is KWELLA?
+## What is KWELLA? 🚕 🙋‍♂️ 🙋‍♀️
 
 KWELLA is an app that connects riders with convenience-taxis in their area. The KWELLA's main focus is providing riders with a platform where they can request **special trips** from convenience-taxi drivers.
 
