@@ -1,4 +1,4 @@
-# ⚠️ 🚧 👷‍♂️ KWELLA - 🚖 
+# KWELLA - 🚖 ⚠️ 🚧 👷‍♂️
 
 ## What is KWELLA? 🚕 🙋‍♂️ 🙋‍♀️
 
