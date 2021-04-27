@@ -1,4 +1,4 @@
-# KWELLA - The convenience-taxi hailing app ⚠️ 🚧 👷‍♂️
+# KWELLA - 🚖 ⚠️ 🚧 👷‍♂️
 
 ## What is KWELLA? 🚕 🙋‍♂️ 🙋‍♀️
 
