@@ -1,4 +1,4 @@
-# KWELLA - The convenience-taxi hailing app
+# KWELLA 🚖 - ⚠️ 🚧 👷‍♂️
 
 ## NB: THIS PROJECT IS CURRENTLY UNDER HEAVY DEVELOPMENT
 
@@ -16,7 +16,7 @@
 
   * run the tests with ```bash pytest -v```
 
-## What IS KWELLA?
+## What is KWELLA? 🚕 🙋‍♂️ 🙋‍♀️
 
 KWELLA will be an app that connects riders with convenience-taxis in their area. KWELLA's main focus will be providing riders with a platform where they can request **special trips** from convenience-taxi drivers.
 
@@ -56,14 +56,12 @@ A driver and owner will negotiate the terms of their partnership outside the app
 
 The taxi owner will be able to see all the trips (_normal_ and _special_) accepted by the driver throughout the day, with a total estimation of how much the driver should bring by the end of the day. If the taxi owner is not pleased with the driver's performance, the taxi owner will have the option to de-assign the driver from a taxi. Both the driver and the owner will (optionally) rate each other. This rating will be crucial in helping others decide who to partner with (as a driver or owner).
 
-## BOY! THIS SOUNDS AN AWEFUL LOT LIKE UBER AND LYFT :see_no_evil:
+## BOY! THIS SOUNDS AN AWEFUL LOT LIKE UBER AND LYFT
 
-
-Very good observation! It is true that innovative nature of Uber has made it possible for other similar entitiies to seek a piece of the pie in this market. However, this project and it's design is no way intended to compete with the giants in the game. 
+Very good observation! It is true that innovative nature of Uber has made it possible for other similar entitiies to seek a piece of the pie in this market. However, this project and it's design is no way intended to compete with the giants in the game.
 
 This project (KWELLA) aims to target the local township market in SOUTH AFRICA.
 
 In most (..and by most, I mean all) townships, around SOUTH AFRICA, the taxi industry is...uhm, a very delicate industry. The introduction of giants such as UBER or BOLT were tried and failed, vigorously, due to the fact that these giants, placed themselves as competitors, threatening to annihilate pre-existing taxi infrustructure.
 
 KWELLA's objective, is to enhance the operational nature of these pre-existing taxi infrustructures, by working hand-in-hand with the players in migrating a small (operational) piece into the digital world. KWELLA's end goal is to digitize the entire taxi industry in SOUTH AFRICA.
-
