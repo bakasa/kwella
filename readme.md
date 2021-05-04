@@ -4,19 +4,57 @@
 
   * clone the respository.
 
-   ```bash 
+   ```bash
    git clone https://github.com/yangakandeni/kwella.git
    ```
 
-  * encapsulate the project in an isolated environment ```bash python3 -m venv venv``` or ```bash python -m venv venv``` on windows.
+  * encapsulate the project in an isolated environment
 
-  * activate your environment ```bash source venv/bin/activate``` or ```bash ./venv/Scripts/activate``` on windows.
+    ```bash
+    python3 -m venv venv
+    ```
 
-  * install project dependencies ```bash pip install -r requirements.txt``` and wait until finished.
+    or
 
-  * change to the server directory `kwella/server/` with ```bash cd server```
+    ```bash
+    python -m venv venv
+    ```
 
-  * run the tests with ```bash pytest -v```
+    on windows.
+
+  * activate your environment
+  
+    ```bash
+    source venv/bin/activate
+    ```
+
+    or
+
+    ```bash
+    ./venv/Scripts/activate
+    ```
+
+    on windows.
+
+  * install project dependencies
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+    and wait until finished.
+
+  * change to the server directory `kwella/server/` with
+  
+    ```bash
+    cd server
+    ```
+
+  * run the tests with
+
+    ```bash
+    pytest -v
+    ```
 
 ## What is KWELLA? 🚕 🙋‍♂️ 🙋‍♀️
 
