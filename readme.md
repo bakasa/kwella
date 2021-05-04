@@ -1,8 +1,24 @@
 # KWELLA - The convenience-taxi hailing app
 
-## What is KWELLA?
+## NB: THIS PROJECT IS CURRENTLY UNDER HEAVY DEVELOPMENT
 
-KWELLA is an app that connects riders with convenience-taxis in their area. The KWELLA's main focus is providing riders with a platform where they can request **special trips** from convenience-taxi drivers.
+* ## HOW TO GET THE TESTS RUNNING ON YOUR LOCALHOST?
+
+  * clone the respository ```bash git clone https://github.com/yangakandeni/kwella.git```
+
+  * encapsulate the project in an isolated environment ```bash python3 -m venv venv``` or ```bash python -m venv venv``` on windows.
+
+  * activate your environment ```bash source venv/bin/activate``` or ```bash ./venv/Scripts/activate``` on windows.
+
+  * install project dependencies ```bash pip install -r requirements.txt``` and wait until finished.
+
+  * change to the server directory `kwella/server/` with ```bash cd server```
+
+  * run the tests with ```bash pytest -v```
+
+## What IS KWELLA?
+
+KWELLA will be an app that connects riders with convenience-taxis in their area. KWELLA's main focus will be providing riders with a platform where they can request **special trips** from convenience-taxi drivers.
 
 ### WHAT IS SPECIAL-TRIP?
 
@@ -12,30 +28,42 @@ This special-trip request will be published to all convenience-taxi drivers on t
 
 * #### WHAT IS A ONE-WAY TRIP?
 
-  A one-way trip is a type of trip, where the driver picks up a rider from a pick up location and drops them off at their desired destination. The terms of the one-way trip will be determined by the trip category (_i.e._ **_normal-trip_** or **_special-trip_**).
+  A one-way trip will be the simplest trip type, where the driver picks up a rider from point A and drops them off at point B.
 
 * #### WHAT IS A ROUND-TRIP (OPTIONAL FEATURE)?
 
-  A round-trip is a type of special-trip, where the convenience-taxi driver will pick up a rider from their location and drop them off at their desired destination. The driver will either **wait** for the rider to finish his/her/their errands or the driver will **return** at a later time specified by the rider.
+  A round-trip will be a type of trip, where the driver will pick up a rider from point A and drop them off at point B. The driver will either **wait** for the rider to finish his/her/their errands or the driver will **return** at a later time specified by the rider.
 
-### HOW IS PAYMENT HANDLED?
+### HOW WILL PAYMENT BE HANDLED?
 
-The current payment method is cash only.
+The payment method will be cash only.
 
-### HOW MUCH DOES IT COST?
+### HOW MUCH WILL IT COST?
 
-Commuters - KWELLA is free to download and use for the riders.
+Riders - KWELLA will be free to download and use for the riders.
 
-Convenince-Taxi - In order for a convenience-taxi to be active on KWELLA, the **OWNER** of the taxi must download and register their taxi(s) on the app. The registration process requires the taxi's _Taxi Association Number_, _License Plate Number_, _Proof of Residence_, _Bank Statement_, _Pictures of the Taxi (interior & exterior)_, _Picture of License Card_ and _Copy of ID_. The taxi owner must agree to a subcription fee of _R200.00_ per month/taxi in order to stay active on the platform.
+Drivers - In order for a convenience-taxi to be active on KWELLA, the **OWNER** of the taxi will have to download and register their taxi(s) on the app. The registration process will requires the taxi's _Taxi Association Number_, _License Plate Number_, _Proof of Residence_, _Bank Statement_, _Pictures of the Taxi (interior & exterior)_, _Picture of License Card_ and _Copy of ID_. The taxi owner would have to agree to a subcription fee of _R100.00_ per month/taxi in order to stay active on the platform.
 
-### HOW DOES A DRIVER GET STARTED?
+### HOW WILL A DRIVER GET STARTED?
 
-In order for a driver to get started, he/she/they must be assigned a taxi by a taxi owner. The taxi owner must provide the driver's _Name_, _Cellphone Number_ and _Picture of License Card_. To login and start accepting trips, the driver needs to provide the _Taxi Association Number_ (of their assigned taxi) and their phone number (used when assigning them to said taxi).
+In order for a driver to get started, he/she/they will be assigned a taxi by a taxi owner. The taxi owner will have to provide the driver's _Name_, _Cellphone Number_ and _Picture of License Card_.
 
-#### HOW DOES A DRIVER GET PAID?
+#### HOW WILL A DRIVER GET PAID?
 
 A driver and owner will negotiate the terms of their partnership outside the app. Hence, the app will not concern itself with negotiating rates and resolving disputes.
 
-### WHAT CAN THE TAXI OWNER DO?
+### WHAT WILL THE ROLE OF TAXI OWNER BE?
 
-The taxi owner can see all the trips (_normal_ and _special_) accepted by the driver throughout the day, with a total estimation of how much the driver should bring by the end of the day. If the taxi owner is not pleased with the driver's performance, the taxi owner can de-assign the driver from a taxi. Both the driver and the owner can (optionally) rate each other on a monthly basis or at the end of their partnership. This rating is crucial in helping others decide who to partner with (as a driver or owner).
+The taxi owner will be able to see all the trips (_normal_ and _special_) accepted by the driver throughout the day, with a total estimation of how much the driver should bring by the end of the day. If the taxi owner is not pleased with the driver's performance, the taxi owner will have the option to de-assign the driver from a taxi. Both the driver and the owner will (optionally) rate each other. This rating will be crucial in helping others decide who to partner with (as a driver or owner).
+
+## BOY! THIS SOUNDS AN AWEFUL LOT LIKE UBER AND LYFT :see_no_evil:
+
+
+Very good observation! It is true that innovative nature of Uber has made it possible for other similar entitiies to seek a piece of the pie in this market. However, this project and it's design is no way intended to compete with the giants in the game. 
+
+This project (KWELLA) aims to target the local township market in SOUTH AFRICA.
+
+In most (..and by most, I mean all) townships, around SOUTH AFRICA, the taxi industry is...uhm, a very delicate industry. The introduction of giants such as UBER or BOLT were tried and failed, vigorously, due to the fact that these giants, placed themselves as competitors, threatening to annihilate pre-existing taxi infrustructure.
+
+KWELLA's objective, is to enhance the operational nature of these pre-existing taxi infrustructures, by working hand-in-hand with the players in migrating a small (operational) piece into the digital world. KWELLA's end goal is to digitize the entire taxi industry in SOUTH AFRICA.
+
