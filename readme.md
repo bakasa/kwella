@@ -4,8 +4,9 @@
 
   * clone the respository.
 
-  ```bash git clone https://github.com/yangakandeni/kwella.git
-  ```
+   ```bash 
+   git clone https://github.com/yangakandeni/kwella.git
+   ```
 
   * encapsulate the project in an isolated environment ```bash python3 -m venv venv``` or ```bash python -m venv venv``` on windows.
 
