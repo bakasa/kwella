@@ -96,7 +96,7 @@ A driver and owner will negotiate the terms of their partnership outside the app
 
 The taxi owner will be able to see all the trips (_normal_ and _special_) accepted by the driver throughout the day, with a total estimation of how much the driver should bring by the end of the day. If the taxi owner is not pleased with the driver's performance, the taxi owner will have the option to de-assign the driver from a taxi. Both the driver and the owner will (optionally) rate each other. This rating will be crucial in helping others decide who to partner with (as a driver or owner).
 
-## BOY! THIS SOUNDS AN AWEFUL LOT LIKE UBER AND LYFT
+## BOY! THIS SOUNDS AN AWEFUL LOT LIKE UBER AND LYFT! 🙈
 
 Very good observation! It is true that innovative nature of Uber has made it possible for other similar entitiies to seek a piece of the pie in this market. However, this project and it's design is no way intended to compete with the giants in the game.
 
