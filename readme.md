@@ -98,7 +98,7 @@ The taxi owner will be able to see all the trips (_normal_ and _special_) accept
 
 ## BOY! THIS SOUNDS AN AWEFUL LOT LIKE UBER AND LYFT! 🙈
 
-Very good observation! It is true that the innovative nature of Uber has made it possible for other similar entitiies to seek a piece of the pie in this market. However, this project and it's design is no way intended to compete with the giants in the game.
+Very good observation! It is true that the innovative nature of Uber has made it possible for other similar entities to seek a piece of the pie in this market. However, this project and it's design is no way intended to compete with the giants in the game.
 
 This project (KWELLA) aims to target the local township market in SOUTH AFRICA.
 
